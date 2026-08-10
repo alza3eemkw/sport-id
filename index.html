@@ -561,6 +561,7 @@
                             <option value="" disabled selected>اختر فئتك الرياضية *</option>
                             <option value="مشجع">مشجع رياضي</option>
                             <option value="لاعب">لاعب / رياضي</option>
+                            <option value="صانع محتوى رياضي">صانع محتوى رياضي 🎬</option>
                             <option value="محلل">محلل رياضي</option>
                             <option value="إداري">إداري / منظم</option>
                             <option value="متجر او مشروع">متجر أو مشروع 🛍️</option>
@@ -702,11 +703,29 @@
                 return {
                     categoryTitle: 'المعلومات الرياضية',
                     fields: [
-                        { id: 'dyn1', label: 'الرياضة', options: ['كرة القدم ⚽', 'دراجات نارية / راليات 🏍️', 'كورة صالات 🥅', 'أخرى'], icon: '🏅' },
-                        { id: 'dyn2', label: 'المركز', options: ['هجوم ⚡', 'وسط 🎯', 'دفاع 🛡️', 'حراسة 🧤', 'أخرى'], icon: '📌' },
-                        { id: 'dyn3', label: 'القدم المفضلة', options: ['يمنى 🦶', 'يسرى 🦵', 'كلا القدمين ⚡', 'أخرى'], icon: '🎯' }
+                        { id: 'dyn1', label: 'النادي', type: 'text', placeholder: 'اسم النادي...', icon: '⚽' },
+                        { id: 'dyn2', label: 'اللعبة أو الرياضة', type: 'text', placeholder: 'مثال: كرة القدم، راليات...', icon: '🏅' },
+                        { id: 'dyn3', label: 'القدم المفضلة', options: ['يمنى 🦶', 'يسرى 🦵', 'كلا القدمين ⚡', 'أخرى'], icon: '🎯' },
+                        { id: 'dyn4', label: 'رقم التيشيرت', type: 'text', placeholder: 'مثال: 10', icon: '👕' },
+                        { id: 'dyn5', label: 'المنتخب', type: 'text', placeholder: 'اسم المنتخب...', icon: '🏆' }
                     ],
                     showPhysical: true,
+                    showLocation: true
+                };
+            case 'صانع محتوى رياضي':
+                return {
+                    categoryTitle: 'بيانات صانع المحتوى الرياضي',
+                    fields: [
+                        { id: 'dyn1', label: 'الاسم', type: 'text', placeholder: 'اسم صانع المحتوى...', icon: '🏷️' },
+                        { id: 'dyn2', label: 'المجال', type: 'text', placeholder: 'المجال الرياضي...', icon: '📊' },
+                        { id: 'dyn3', label: 'التخصص', type: 'text', placeholder: 'التخصص الدقيق...', icon: '💡' },
+                        { id: 'dyn4', label: 'المنصة الرئيسية', type: 'text', placeholder: 'مثال: يوتيوب، تيك توك...', icon: '📱' },
+                        { id: 'dyn5', label: 'نوع المحتوى', type: 'text', placeholder: 'تعليمي، ترفيهي، تحليلي...', icon: '🎬' },
+                        { id: 'dyn6', label: 'الاهتمامات الرياضية', type: 'text', placeholder: 'الاهتمامات المفضلة...', icon: '⭐' },
+                        { id: 'dyn7', label: 'الجنسية', type: 'text', placeholder: 'الجنسية...', icon: '🌍' },
+                        { id: 'dyn8', label: 'اللغة', type: 'text', placeholder: 'لغة المحتوى...', icon: '🗣️' }
+                    ],
+                    showPhysical: false,
                     showLocation: true
                 };
             case 'محلل':
@@ -1248,7 +1267,7 @@
             }
 
             document.getElementById('id-fullname').value = myLoadedCard.fullName || '';
-            const stdTypes = ['مشجع', 'لاعب', 'محلل', 'إداري', 'متجر او مشروع'];
+            const stdTypes = ['مشجع', 'لاعب', 'صانع محتوى رياضي', 'محلل', 'إداري', 'متجر او مشروع'];
             if (stdTypes.includes(myLoadedCard.type)) {
                 typeSelect.value = myLoadedCard.type;
                 typeCustomInput.style.display = 'none';
