@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sport ID - البطاقة التعريفية الرياضية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- مكتبة توليد QR Code -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #008000;
@@ -365,37 +363,6 @@
             font-style: italic; border: 1px solid rgba(255,255,255,0.06);
         }
 
-        /* --- QR Code Box Style --- */
-        .qrcode-section-box {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 16px;
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-        }
-        .qrcode-title {
-            font-size: 0.82rem;
-            color: var(--text-dim);
-            font-weight: 700;
-        }
-        .qrcode-wrapper {
-            background: #fff;
-            padding: 10px;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: inline-block;
-        }
-        .qrcode-wrapper canvas, .qrcode-wrapper img {
-            display: block;
-            width: 120px !important;
-            height: 120px !important;
-        }
-
         .id-socials-linktree { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
         .linktree-btn {
             display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
@@ -452,19 +419,10 @@
         </div>
         <nav class="drawer-nav">
             <a href="https://alza3eemkw.github.io/alza3eem.github.io/" class="drawer-item">
-                <span class="icon">🏠</span><span>منصتنا</span>
-            </a>
-            <a href="https://alza3eemkw.github.io/alza3eem.github.io/#prediction" class="drawer-item">
-                <span class="icon">🎯</span><span>سجل توقعك</span>
-            </a>
-            <a href="https://alza3eemkw.github.io/alza3eem.github.io/#leaderboard" class="drawer-item">
-                <span class="icon">📊</span><span>الجدول</span>
+                <span class="icon">🏠</span><span>العودة للصفحة الرئيسية للمنصه</span>
             </a>
             <a href="index.html" class="drawer-item active">
                 <span class="icon">🪪</span><span>Sport ID</span>
-            </a>
-            <a href="https://alza3eemkw.github.io/alza3eem.github.io/#kickoff" class="drawer-item">
-                <span class="icon">⏳</span><span>Kick off</span>
             </a>
         </nav>
         <a href="https://instagram.com/alza3eem__kw" target="_blank" class="drawer-footer-link">
@@ -514,13 +472,6 @@
                     <div id="prev-categorized-content"></div>
                     
                     <div class="id-bio" id="prev-bio" style="display: none;"></div>
-
-                    <!-- حاوية QR Code للزوار (تعتمد على sportId) -->
-                    <div class="qrcode-section-box">
-                        <div class="qrcode-title">امسح الـ QR لزيارة البطاقة مباشرة</div>
-                        <div class="qrcode-wrapper" id="public-qrcode-element"></div>
-                    </div>
-
                     <div class="linktree-section-title">روابط التواصل والموقع</div>
                     <div class="id-socials-linktree" id="prev-socials"></div>
                 </div>
@@ -529,7 +480,7 @@
             <!-- حالة الخطأ -->
             <div id="error-container" class="error-state" style="display: none;">
                 <div class="error-title">⚠️ هذه البطاقة غير موجودة</div>
-                <div class="error-desc">عذراً، المعرف الذي تبحث عنه غير مسجل أو تم حذف البطاقة المرتبطة به.</div>
+                <div class="error-desc">عذراً، اسم المستخدم الذي تبحث عنه غير مسجل أو تم حذف البطاقة المرتبطة به.</div>
                 <a href="index.html" class="action-btn">إنشاء بطاقتك الخاصة</a>
             </div>
 
@@ -559,13 +510,6 @@
                         <div id="owner-prev-categorized-content"></div>
 
                         <div class="id-bio" id="owner-prev-bio" style="display: none;"></div>
-
-                        <!-- حاوية QR Code للمالك (تعتمد على sportId) -->
-                        <div class="qrcode-section-box">
-                            <div class="qrcode-title">QR Code الخاص ببطاقتك</div>
-                            <div class="qrcode-wrapper" id="owner-qrcode-element"></div>
-                        </div>
-
                         <div class="linktree-section-title">روابط التواصل والموقع</div>
                         <div class="id-socials-linktree" id="owner-prev-socials"></div>
                     </div>
@@ -729,9 +673,8 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const usernameQuery = urlParams.get('u');
-    const sportIdQuery = urlParams.get('id'); // دعم الاستعلام المباشر عبر sportId للـ QR
 
-    if (usernameQuery || sportIdQuery) {
+    if (usernameQuery) {
         document.body.classList.add('profile-mode');
     }
 
@@ -824,61 +767,20 @@
     function validateUsernameFormat(u) { return /^[a-z0-9_-]+$/.test(u); }
     function hideLoader() { const l = document.getElementById('global-loader'); if(l) l.style.display = 'none'; }
 
-    // توليد معرف فريد وثابت Sport ID مثل SID-A7K92X
-    function generateUniqueSportId() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let result = 'SID-';
-        for (let i = 0; i < 6; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-    }
-
-    // دالة توليد QR Code بحيث يحتوي على رابط الـ sportId حصرياً
-    function generateQRCode(elementId, sportIdCode) {
-        const container = document.getElementById(elementId);
-        if (!container) return;
-        container.innerHTML = ""; // تفريغ القديم إن وجد
-        const baseUrl = window.location.origin + window.location.pathname;
-        const qrTargetUrl = `${baseUrl}?id=${encodeURIComponent(sportIdCode)}`;
-        
-        new QRCode(container, {
-            text: qrTargetUrl,
-            width: 120,
-            height: 120,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    }
-
     window.addEventListener('DOMContentLoaded', () => {
-        if (usernameQuery || sportIdQuery) loadPublicProfile();
+        if (usernameQuery) loadPublicProfile();
         else initDashboard();
     });
 
     async function loadPublicProfile() {
         try {
-            let snap;
-            if (sportIdQuery) {
-                const qId = query(collection(db, "identityCards"), where("sportId", "==", sportIdQuery));
-                snap = await getDocs(qId);
-            } else if (usernameQuery) {
-                const cleanUname = sanitizeUsername(usernameQuery);
-                const qU = query(collection(db, "identityCards"), where("usernameLink", "==", cleanUname));
-                snap = await getDocs(qU);
-            }
+            const cleanUname = sanitizeUsername(usernameQuery);
+            const q = query(collection(db, "identityCards"), where("usernameLink", "==", cleanUname));
+            const snap = await getDocs(q);
             
             hideLoader();
-            if (!snap || snap.empty) { showErrorState(); return; }
-            const cardData = snap.docs[0].data();
-            renderProfileCard(cardData, 'prev-name', 'prev-role', 'prev-categorized-content', 'prev-bio', 'prev-socials', 'prev-photo-container');
-            
-            // توليد الـ QR Code باستخدام الـ sportId الثابت والخاص بالبطاقة
-            if (cardData.sportId) {
-                generateQRCode('public-qrcode-element', cardData.sportId);
-            }
-
+            if (snap.empty) { showErrorState(); return; }
+            renderProfileCard(snap.docs[0].data(), 'prev-name', 'prev-role', 'prev-categorized-content', 'prev-bio', 'prev-socials', 'prev-photo-container');
         } catch (e) {
             console.error(e);
             hideLoader();
@@ -990,7 +892,7 @@
         const photoUploadStatus = document.getElementById('photo-upload-status');
         const fullnameInput = document.getElementById('id-fullname');
 
-        // Instagram Style Crop Modal
+        // Instagram Crop Variables
         const instaModal = document.getElementById('instaCropModal');
         const instaCanvas = document.getElementById('insta-crop-canvas');
         const instaCtx = instaCanvas.getContext('2d');
@@ -1015,6 +917,7 @@
                 reader.onload = (event) => {
                     cropImg = new Image();
                     cropImg.onload = () => {
+                        // Initialize position & scale
                         const canvasSize = 280;
                         let minDim = Math.min(cropImg.width, cropImg.height);
                         imgScale = canvasSize / minDim;
@@ -1043,6 +946,7 @@
             instaCtx.restore();
         }
 
+        // Drag handlers
         instaContainer.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.clientX - imgX;
@@ -1056,6 +960,7 @@
         });
         window.addEventListener('mouseup', () => { isDragging = false; });
 
+        // Touch handlers for mobile
         instaContainer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 isDragging = true;
@@ -1074,6 +979,7 @@
         instaScaleSlider.addEventListener('input', (e) => {
             const newScale = parseFloat(e.target.value);
             const centerSize = 280;
+            // Zoom towards center
             const centerX = centerSize / 2;
             const centerY = centerSize / 2;
             
@@ -1089,6 +995,7 @@
         });
 
         instaCropApply.addEventListener('click', () => {
+            // Render final circular crop into high-res canvas
             const finalCanvas = document.createElement('canvas');
             finalCanvas.width = 400;
             finalCanvas.height = 400;
@@ -1154,11 +1061,6 @@
                     
                     renderProfileCard(myLoadedCard, 'owner-prev-name', 'owner-prev-role', 'owner-prev-categorized-content', 'owner-prev-bio', 'owner-prev-socials', 'owner-prev-photo-container');
                     
-                    // توليد الـ QR Code للمالك في لوحة التحكم باستخدام الـ sportId الثابت والخاص به
-                    if (myLoadedCard.sportId) {
-                        generateQRCode('owner-qrcode-element', myLoadedCard.sportId);
-                    }
-
                     document.getElementById('owner-preview-panel').style.display = 'block';
                     document.getElementById('identity-form').style.display = 'none';
                 } else {
@@ -1284,20 +1186,8 @@
             let typeVal = typeSelect.value === 'أخرى' ? typeCustomInput.value.trim() : typeSelect.value;
             const usernameKey = sanitizeUsername(document.getElementById('id-username-link').value);
 
-            const docRef = doc(db, "identityCards", currentUser.uid);
-            const docSnap = await getDoc(docRef);
-
-            // التحقق من وجود sportId مسبقاً، وإذا لم يوجد يتم توليده وثباته
-            let assignedSportId;
-            if (docSnap.exists() && docSnap.data().sportId) {
-                assignedSportId = docSnap.data().sportId;
-            } else {
-                assignedSportId = generateUniqueSportId();
-            }
-
             let cardData = {
                 ownerUid: currentUser.uid,
-                sportId: assignedSportId, // الحفظ الثابت للـ sportId
                 fullName: document.getElementById('id-fullname').value.trim(),
                 type: typeVal,
                 usernameLink: usernameKey,
@@ -1331,6 +1221,8 @@
                 }
             });
 
+            const docRef = doc(db, "identityCards", currentUser.uid);
+            const docSnap = await getDoc(docRef);
             cardData.createdAt = docSnap.exists() && docSnap.data().createdAt ? docSnap.data().createdAt : serverTimestamp();
 
             try {
